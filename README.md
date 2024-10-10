@@ -21,7 +21,15 @@
 
 ## CSV
 
-Um arquivo CSV (Comma-Separated Values) é um formato de arquivo de texto simples onde os dados são armazenados em linhas, e cada valor dentro de uma linha é separado por uma vírgula. Esse formato é amplamente utilizado para armazenar e compartilhar dados tabulares, como planilhas e bancos de dados.
+Um arquivo CSV (Comma-Separated Values/Valores separados por vírgula) é um formato de arquivo de texto simples onde os dados são armazenados em linhas, e cada valor dentro de uma linha é separado por uma vírgula. Esse formato é amplamente utilizado para armazenar e compartilhar dados tabulares, como planilhas e bancos de dados.
+
+Cada linha do arquivo representa um registro, e as colunas são separadas por vírgulas. Por exemplo, um arquivo CSV que lista tarefas poderia ser assim:
+
+```csv
+title,description
+Task 01,Descrição da Task 01
+Task 02,Descrição da Task 02
+```
 
 O objetivo é adicionarmos um arquivo em formato CSV para cadastro de múltiplos dados simultaneamente.
 

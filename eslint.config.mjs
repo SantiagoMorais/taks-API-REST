@@ -24,8 +24,6 @@ export default [
     rules: {
       // Regras ESLint personalizadas
       "no-unused-vars": "warn", // Aviso para variáveis não usadas
-      "no-console": ["warn", { allow: ["warn", "error"] }], // Permitir console.warn e console.error
-      "prettier/prettier": "error", // Ligar o Prettier como regra do ESLint
     },
   },
 ];
