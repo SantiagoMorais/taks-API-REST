@@ -6,8 +6,8 @@
 
 - [Objetivos do projeto](#objetivos-do-projeto)
 - [Rotas e regras de negócio](#rotas-e-regras-de-negócio)
-    - [Estrutura(propriedades) de uma task](#estrutura-propriedades-de-uma-task)
-    - [Rotas](#rotas)
+  - [Estrutura(propriedades) de uma task](#estrutura-propriedades-de-uma-task)
+  - [Rotas](#rotas)
 
 # Objetivos do projeto
 
@@ -17,7 +17,6 @@
 4. Remover uma task pelo `id`
 5. Marcar pelo `id` uma task como completa
 6. Importação de tasks em massa por um arquivo CSV
-
 
 ## CSV
 
@@ -49,26 +48,22 @@ Esse processo de importação em massa é útil quando você tem muitas tarefas 
 ## Rotas
 
 - `POST - /tasks`
-    - Criar uma task no banco de dados, enviando os campos `title` e `description` por meio do `body` da requisição.
-    - Ao criar uma task, os campos: `id`, `created_at`, `updated_at` e `completed_at` devem ser preenchidos automaticamente.
-    
+  - Criar uma task no banco de dados, enviando os campos `title` e `description` por meio do `body` da requisição.
+  - Ao criar uma task, os campos: `id`, `created_at`, `updated_at` e `completed_at` devem ser preenchidos automaticamente.
 - `GET - /tasks`
-    - Listar todas as tasks salvas no banco de dados.
-    - Realização de buscas, filtrando as tasks pelo `title` e `description`
-    
+  - Listar todas as tasks salvas no banco de dados.
+  - Realização de buscas, filtrando as tasks pelo `title` e `description`
 - `PUT - /tasks/:id`
-    - Atualizar uma task pelo `id`.
-    - No `body` da requisição, será recebido somente o `title` e/ou `description` para serem atualizados.
-    - Envio de um único dado o outro não pode ser atualizado e vice-versa.
-    - Antes da atualização, é realizado uma validação se o `id` pertence a uma task salva no banco de dados.
-    
+  - Atualizar uma task pelo `id`.
+  - No `body` da requisição, será recebido somente o `title` e/ou `description` para serem atualizados.
+  - Envio de um único dado o outro não pode ser atualizado e vice-versa.
+  - Antes da atualização, é realizado uma validação se o `id` pertence a uma task salva no banco de dados.
 - `DELETE - /tasks/:id`
-    - Remoção de uma task pelo `id`.   
-    - Antes da remoção, o `id` é validado ao chegar se ele pertence a uma task salva no banco de dados.
-    
+  - Remoção de uma task pelo `id`.
+  - Antes da remoção, o `id` é validado ao chegar se ele pertence a uma task salva no banco de dados.
 - `PATCH - /tasks/:id/complete`
-    - Marcação de conclusão de uma task. Quando uma task é concluida retorna ao seu estado “normal”. 
-    - Antes da alteração o `id` é validado ao checar se ele pertence a uma task salva no banco de dados.
+  - Marcação de conclusão de uma task. Quando uma task é concluida retorna ao seu estado “normal”.
+  - Antes da alteração o `id` é validado ao checar se ele pertence a uma task salva no banco de dados.
 
 ## Implementações extras
 
@@ -77,3 +72,31 @@ Esse processo de importação em massa é útil quando você tem muitas tarefas 
 
 # Desenvolvimento do projeto
 
+Criação inicial do servidor:
+
+```js
+import http from "node:http";
+
+const port = 3333;
+const server = http.createServer((req, res) => {
+  return res.end("Hello World");
+});
+
+server.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
+```
+
+Criação básica de rotas utilizando os métodos `method` e `url` para conferir o método a e a rota utilizada. Caso atentam aos critérios do `if` haverá um retorno.
+
+```js
+const { method, url } = req;
+
+if (method === "POST" && url === "/tasks") {
+  return res.end("Tasks creation route");
+}
+
+if (method === "GET" && url === "/tasks") {
+  return res.end("Tasks list route");
+}
+```
