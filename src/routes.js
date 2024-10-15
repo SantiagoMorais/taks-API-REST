@@ -9,11 +9,14 @@ export const routes = [
     method: "GET",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
-      const tasks = db.select("tasks");
-      return res
-        .setHeader("Content-type", "application/json; charset=utf-8")
-        .writeHead(200)
-        .end(JSON.stringify(tasks));
+      const { search } = req.query;
+
+      const tasks = db.select(
+        "tasks",
+        search ? { title: search, description: search } : null
+      );
+
+      return res.writeHead(200).end(JSON.stringify(tasks));
     },
   },
   {
@@ -48,7 +51,28 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params;
       db.delete("tasks", id);
-      return res.end();
+      return res.writeHead(204).end();
+    },
+  },
+  {
+    method: "PUT",
+    path: buildRoutePath("/tasks/:id"),
+    handler: (req, res) => {
+      const { id } = req.params;
+      const { title, description } = req.body;
+      const now = new Date();
+
+      const formattedDateTime = {
+        date: now.toLocaleDateString("pt-BR"),
+        hour: now.toLocaleTimeString("pt-BR"),
+      };
+
+      db.update("tasks", id, {
+        title,
+        description,
+        updated_at: formattedDateTime,
+      });
+      return res.writeHead(204).end();
     },
   },
 ];
