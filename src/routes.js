@@ -72,6 +72,7 @@ export const routes = [
         description,
         updated_at: formattedDateTime,
       });
+      
       return res.writeHead(204).end();
     },
   },
