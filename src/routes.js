@@ -84,4 +84,21 @@ export const routes = [
       return res.writeHead(204).end();
     },
   },
+  {
+    method: "PATCH",
+    path: buildRoutePath("/tasks/:id/complete"),
+    handler: (req, res) => {
+      const { id } = req.params;
+      const now = new Date();
+
+      db.complete("tasks", id, {
+        completed_at: {
+          date: now.toLocaleDateString("pt-BR"),
+          hour: now.toLocaleTimeString("pt-BR"),
+        },
+      });
+
+      res.writeHead(204).end();
+    },
+  },
 ];
