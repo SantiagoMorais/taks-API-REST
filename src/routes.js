@@ -11,7 +11,7 @@ export const routes = [
     handler: (req, res) => {
       const { search } = req.query;
 
-      const tasks = db.select(
+      const tasks = db.selectAll(
         "tasks",
         search ? { title: search, description: search } : null
       );
@@ -63,7 +63,7 @@ export const routes = [
     path: buildRoutePath("/tasks/:id"),
     handler: (req, res) => {
       const { id } = req.params;
-      const checkId = db.findUnique("tasks", id);
+      const checkId = db.selectUnique("tasks", id);
 
       if (!checkId) {
         return res.writeHead(404).end("Task not found");
@@ -80,7 +80,7 @@ export const routes = [
       const { id } = req.params;
       const { title, description } = req.body;
       const now = new Date();
-      const checkId = db.findUnique("tasks", id);
+      const checkId = db.selectUnique("tasks", id);
 
       if (!checkId) {
         return res.writeHead(404).end("Task not found");
@@ -114,7 +114,7 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params;
       const now = new Date();
-      const checkId = db.findUnique("tasks", id);
+      const checkId = db.selectUnique("tasks", id);
 
       if (!checkId) {
         return res.writeHead(404).end("Task not found");

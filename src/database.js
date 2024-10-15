@@ -18,7 +18,7 @@ export class Database {
     fs.writeFile(databasePath, JSON.stringify(this.#database));
   }
 
-  select(table, search) {
+  selectAll(table, search) {
     let data = this.#database[table] ?? [];
 
     if (search) {
@@ -32,7 +32,7 @@ export class Database {
     return data;
   }
 
-  findUnique(table, id) {
+  selectUnique(table, id) {
     const rowIndex = this.#database[table].findIndex((row) => row.id === id);
     if (rowIndex > -1) {
       return this.#database[table][rowIndex];

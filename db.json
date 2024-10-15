@@ -1,1 +1,244 @@
-{"tasks":[{"id":"4a9d7d7c-ccd9-4b3f-96a8-74bfd9c59a34","title":"2","description":"1","completed_at":{"date":"15/10/2024","hour":"14:09:04"},"created_at":{"date":"15/10/2024","hour":"13:58:42"},"updated_at":{"date":"15/10/2024","hour":"14:10:42"}},{"id":"280ac5e0-b584-42ce-8d7a-f65c78f83af1","title":"ti","description":"descrição task 1","completed_at":{"date":"15/10/2024","hour":"14:12:21"},"created_at":{"date":"15/10/2024","hour":"13:59:02"},"updated_at":{"date":"15/10/2024","hour":"13:59:02"}}]}
+{
+  "tasks": [
+    {
+      "id": "dce69dbd-1567-4176-8115-f6fb19af85d8",
+      "title": "Increase Productivity",
+      "description": "Focus on task prioritization and time management.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:51" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:51" }
+    },
+    {
+      "id": "16cf0681-2f3d-45dc-8a42-bfcb18be7f45",
+      "title": "Improve Health",
+      "description": "Establish a consistent workout routine and balanced diet.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:52" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:52" }
+    },
+    {
+      "id": "059825ee-f888-4f50-85d7-20c43e71ac2b",
+      "title": "Learn a New Language",
+      "description": "Study 30 minutes daily to become fluent in Spanish.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:53" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:53" }
+    },
+    {
+      "id": "3002300c-4b53-4c0f-8c78-e48e6d698ac8",
+      "title": "Read More Books",
+      "description": "Complete at least one book per month.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:54" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:54" }
+    },
+    {
+      "id": "8bf316f2-85ff-4055-86b6-e806f79b19f6",
+      "title": "Save for a Vacation",
+      "description": "Put aside 10% of monthly income for travel.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:55" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:55" }
+    },
+    {
+      "id": "75e4c269-cfbf-48d0-b6bc-ed4ee926c9ab",
+      "title": "Master Public Speaking",
+      "description": "Attend workshops and practice presentations weekly.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:56" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:56" }
+    },
+    {
+      "id": "9fa320dd-2aa2-4adf-8e17-7b26a445df27",
+      "title": "Develop Leadership Skills",
+      "description": "Take on new responsibilities at work to lead projects.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:57" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:57" }
+    },
+    {
+      "id": "179e531d-a676-4405-990e-91aea03c94cd",
+      "title": "Network with Industry Professionals",
+      "description": "Attend networking events once a month.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:58" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:58" }
+    },
+    {
+      "id": "8e1926ae-5993-4526-9bce-13acd2998b25",
+      "title": "Create a Personal Blog",
+      "description": "Write and publish one article each week.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:10:59" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:10:59" }
+    },
+    {
+      "id": "e1a470bb-e2ce-4990-a113-29bed5ec2aa3",
+      "title": "Organize Living Space",
+      "description": "Declutter and maintain a clean, organized home.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:00" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:00" }
+    },
+    {
+      "id": "66e5546b-bcd1-4540-9561-97ceb5c682a4",
+      "title": "Enhance Time Management",
+      "description": "Use a planner to track and optimize daily tasks.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:01" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:01" }
+    },
+    {
+      "id": "7b4e6b3a-4a6c-4e8e-8bf7-011145b7d2e8",
+      "title": "Build Financial Literacy",
+      "description": "Complete one online course on investing and saving.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:02" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:02" }
+    },
+    {
+      "id": "102f81cc-f835-45b0-be09-288244f67234",
+      "title": "Start a Side Business",
+      "description": "Launch an online store for homemade crafts.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:03" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:03" }
+    },
+    {
+      "id": "f7695192-99db-4187-b247-2fd4181aa5f0",
+      "title": "Strengthen Relationships",
+      "description": "Schedule regular catch-ups with friends and family.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:04" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:04" }
+    },
+    {
+      "id": "a039d6f4-b1a3-4c15-bf7e-c45c65f3bcce",
+      "title": "Focus on Mental Well-being",
+      "description": "Practice meditation and mindfulness daily.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:05" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:05" }
+    },
+    {
+      "id": "7ca02ee7-42be-4b9e-95cf-d66e77cb7b79",
+      "title": "Reduce Screen Time",
+      "description": "Limit social media use to 1 hour per day.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:06" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:06" }
+    },
+    {
+      "id": "72ff3026-54d8-4b31-a708-fcfb297fd999",
+      "title": "Improve Work-Life Balance",
+      "description": "Set boundaries and allocate time for personal activities.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:07" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:07" }
+    },
+    {
+      "id": "1834f0df-3620-425b-a74b-8b98bea312a8",
+      "title": "Travel to Three New Places",
+      "description": "Plan and visit new destinations within a year.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:08" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:08" }
+    },
+    {
+      "id": "f80590d1-e009-4b5d-88da-3dff60bdd5af",
+      "title": "Complete a Certification",
+      "description": "Finish an online certification course related to career goals.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:09" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:09" }
+    },
+    {
+      "id": "8f239faf-addc-4837-989b-66333b23b59d",
+      "title": "Reduce Carbon Footprint",
+      "description": "Adopt sustainable practices and reduce waste.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:10" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:10" }
+    },
+    {
+      "id": "0584275e-c495-4fd9-a025-3a2905e7de00",
+      "title": "Cook at Home More Often",
+      "description": "Prepare homemade meals at least five days a week.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:11" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:11" }
+    },
+    {
+      "id": "f5c5d509-8de6-4cb5-8d19-f2f69aa63ed2",
+      "title": "Develop Artistic Skills",
+      "description": "Take drawing classes and practice weekly.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:12" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:12" }
+    },
+    {
+      "id": "ea3bd9d4-2048-4f70-92e4-759c072e8872",
+      "title": "Build a Morning Routine",
+      "description": "Establish a productive routine to start each day.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:13" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:13" }
+    },
+    {
+      "id": "149ec8bc-e2bc-4edb-8583-89c37c696ab1",
+      "title": "Focus on Professional Development",
+      "description": "Attend workshops and complete training programs.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:14" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:14" }
+    },
+    {
+      "id": "54ceb886-1247-4b49-8156-4435dbda1032",
+      "title": "Increase Monthly Savings",
+      "description": "Save at least 15% of income each month.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:15" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:15" }
+    },
+    {
+      "id": "f8f632da-b13d-486b-9251-590069710da2",
+      "title": "Learn a Musical Instrument",
+      "description": "Practice guitar for 20 minutes a day.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:16" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:16" }
+    },
+    {
+      "id": "ab220a6e-50aa-457a-9086-d5b5801c6ce6",
+      "title": "Start a YouTube Channel",
+      "description": "Create and upload two videos per month.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:17" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:17" }
+    },
+    {
+      "id": "dff1d9a3-14af-4c62-97d9-08ac6135066a",
+      "title": "Volunteer in the Community",
+      "description": "Participate in local volunteering activities monthly.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:18" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:18" }
+    },
+    {
+      "id": "e0564116-d21a-4e80-8a23-121aa82a487f",
+      "title": "Achieve a Personal Best in Fitness",
+      "description": "Train for and complete a 10k run.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:19" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:19" }
+    },
+    {
+      "id": "9068180a-03e4-4092-8de5-5f74e870bf85",
+      "title": "Stay Hydrated",
+      "description": "Drink at least 2 liters of water every day.",
+      "completed_at": null,
+      "created_at": { "date": "15/10/2024", "hour": "15:11:20" },
+      "updated_at": { "date": "15/10/2024", "hour": "15:11:20" }
+    }
+  ]
+}
