@@ -16,6 +16,7 @@
     - [Recuperar dados da tabela](#recuperar-dados-da-tabela)
   - [Separar rotas do servidor](#separar-rotas-do-servidor)
   - [Definindo middlewares](#definindo-middlewares)
+  - [Build Route Paths](#build-route-paths)
 
 ## Objetivos do projeto
 
@@ -415,3 +416,58 @@ const server = http.createServer(async (req, res) => {
 ```
 
 Assim, a aplicação só dará continuidade quando todos os buffers forem unidos em um único buffer e adicionado ao `req.body` para só depois realizar a verificação das rotas.
+
+### Build Route Paths
+
+Vamos construir uma função para lidar com parâmetros de rota, pois, em breve, vamos precisar deletar ou atualizar metas pelo `id` em rotas como `/tasks/:id`, portanto precisamos de uma forma de coletar esse id da rota.
+
+```js
+export function buildRoutePath(path) {
+  const routeParametersRegex = /:([a-zA-Z]+)/g;
+  const pathWithParams = path.replaceAll(
+    routeParametersRegex,
+    "(?<$1>[a-z0-9-_]+)"
+  );
+  const pathRegex = new RegExp(`^${pathWithParams}`);
+
+  return pathRegex;
+}
+```
+
+- A função recebe uma string `path`que define a rota.
+- Regex: `/:([a-zA-Z]+)/g` captura parâmetros de rota que começam com `:` e são seguidas por letras. Por exemplo, o nosso `:id` seria capturado.
+- pathWithParams: A função `replaceAll` substitui cada parâmetro da rota por uma expresão regular que captura um padrão correspondente (aqui, um ID gerado pelo `randomUUID` que estamos usando do node) como um grupo nomeado. O resultado, por exemplo, de `/tasks/:id` se tora `/tasks/(?<id>[a-z0-9-_]+)`.
+- pathRegex: Regex final - cria uma nova expressão regular que começa com `^`, indicando que deve corresponder ao início da string. Isso permite que a rota seja testada contra URLs.
+- Retorno: A função retorna a expressão regular que representa o caminho da rota, agora capaz de capturar os parâmetros definidos.
+
+Agora adicionamos nossa função em todas as rotas. Exemplo:
+
+```js
+  {
+    method: "DELETE",
+    path: buildRoutePath("/tasks/:id"),
+    handler: (req, res) => {
+      return res.end();
+    },
+  },
+```
+
+Agora como estamos utilizando o `RegExp` podemos usar alguns métodos no nosso servidor:
+
+```js
+  const route = routes.find((route) => {
+    return route.method === method && route.path.test(url);
+  });
+```
+
+- Encontrar Rota: Aqui, como vimos, o servidor procura uma rota correspondente ao método e URL da requisição. `route.path.test(url)` verifica se a URL corresponde à expressão regular definida para a rota.
+
+```js
+  if (route) {
+    const routeParams = url.match(route.path);    
+    return route.handler(req, res);
+  }
+```
+
+- Handler: Se uma rota correspondente for encontrada (dar `match`), o servidor captura os parâmetros da rota e chama o handler associado, passando `req` e `res`.
+
