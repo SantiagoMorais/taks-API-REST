@@ -1,25 +1,41 @@
 import http from "node:http";
-
-const tasks = [];
+import { randomUUID } from "node:crypto";
+import { Buffer } from "node:buffer";
 
 const port = 3333;
-const server = http.createServer((req, res) => {
+const tasks = [];
+
+const server = http.createServer(async (req, res) => {
   const { method, url } = req;
 
-  if (method === "POST" && url === "/tasks") {
+  const buffers = [];
+
+  for await (const chunk of req) {
+    buffers.push(chunk);
+  }
+
+  try {
+    req.body = JSON.parse(Buffer.concat(buffers).toString());
+  } catch {
+    req.body = null;
+  }
+
+  if (method === "GET" && url === "/tasks") {
     return res
       .setHeader("Content-type", "application/json; charset=utf-8")
       .writeHead(200)
       .end(JSON.stringify(tasks));
   }
 
-  if (method === "GET" && url === "/tasks") {
+  if (method === "POST" && url === "/tasks") {
+    const { title, description } = req.body;
+
     tasks.push({
-      id: 1,
-      title: "levar cachorro para passear",
-      description: "Às 16h",
+      id: randomUUID(),
+      title,
+      description,
     });
-    return res.writeHead(201).end(JSON.stringify(tasks));
+    return res.writeHead(201).end();
   }
 
   return res.end("Hello World");
