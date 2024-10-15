@@ -62,17 +62,25 @@ export const routes = [
       const { title, description } = req.body;
       const now = new Date();
 
-      const formattedDateTime = {
-        date: now.toLocaleDateString("pt-BR"),
-        hour: now.toLocaleTimeString("pt-BR"),
-      };
+      const updatedData = {};
 
-      db.update("tasks", id, {
-        title,
-        description,
-        updated_at: formattedDateTime,
-      });
-      
+      if (title) {
+        updatedData.title = title;
+      }
+
+      if (description) {
+        updatedData.description = description;
+      }
+
+      if (Object.keys(updatedData).length > 0) {
+        updatedData.updated_at = {
+          date: now.toLocaleDateString("pt-BR"),
+          hour: now.toLocaleTimeString("pt-BR"),
+        };
+
+        db.update("tasks", id, updatedData);
+      }
+
       return res.writeHead(204).end();
     },
   },
