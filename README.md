@@ -11,6 +11,7 @@
   - [Implementações extras](#implementações-extras)
 - [Desenvolvimento do projeto](#desenvolvimento-do-projeto)
   - [Criação de uma nova meta](#criação-de-uma-nova-meta)
+  - [Banco de dados](#banco-de-dados)
 
 ## Objetivos do projeto
 
@@ -180,3 +181,80 @@ if (method === "GET" && url === "/tasks") {
     .end(JSON.stringify(tasks));
 }
 ```
+
+### Banco de dados
+
+O banco de dados foi criado utilizando uma `class` javascript:
+
+```js
+export class Database {
+  database = {};
+}
+```
+
+A princípio ele somente possui uma propriedade que é um objeto, chamada `database`, onde serão armazenados os dados do banco e, a princípio, teremos duas funções:
+
+```js
+  select(table) {
+    const data = this.database[table] ?? [];
+    return data;
+  }
+```
+
+Seleciona os dados da tabela e confere se ela já possui dados. Caso não, é retornado um array vazio.
+
+```js
+  insert(table, data) {
+    if (Array.isArray(this.database[table])) {
+      this.database[table].push(data);
+    } else {
+      this.database[table] = [data];
+    }
+
+    return data;
+  }
+```
+
+Insere novos dados na tabela `table` os novos dados `data`. Se a tabela já existir e for um array, é adicionado o novo dado à tabela. Caso não, a tabela é criada com o novo dado.
+
+**Exemplo de uso:**
+
+```js
+const db = new Database();
+
+db.insert("tasks", { title: "task 1", description: "description 1" });
+db.insert("tasks", { title: "task 2", description: "description 2" });
+
+const tasks = db.select("tasks");
+console.log(tasks);
+// Retorno: [
+//    {title: "task 1", description: "description 1" },
+//    {title: "task 2", description: "description 2" }
+// ]
+```
+
+Agora só precisamos aplicar nosso banco de dados no servidor ao invés de usar um array comum, como estávamos fazendo.
+
+**Inserir novos dados**
+```js
+import { Database } from "./database.js";
+const db = new Database();
+// ...
+const task = {
+  id: randomUUID(),
+  title,
+  description,
+};
+
+db.insert("tasks", task);
+```
+**Coletar dados da tabela**
+```js
+const tasks = db.select("tasks");
+return res
+  .setHeader("Content-type", "application/json; charset=utf-8")
+  .writeHead(200)
+  .end(JSON.stringify(tasks));
+```
+
+
