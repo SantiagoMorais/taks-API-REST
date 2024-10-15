@@ -29,14 +29,25 @@ const server = http.createServer(async (req, res) => {
 
   if (method === "POST" && url === "/tasks") {
     const { title, description } = req.body;
-
+    const now = new Date();
+  
+    const formattedDateTime = {
+      date: now.toLocaleDateString("pt-BR"),
+      hour: now.toLocaleTimeString("pt-BR"),
+    };
+  
     tasks.push({
       id: randomUUID(),
       title,
       description,
+      completed_at: null,
+      created_at: formattedDateTime,
+      updated_at: formattedDateTime,
     });
+  
     return res.writeHead(201).end();
   }
+  
 
   return res.end("Hello World");
 });

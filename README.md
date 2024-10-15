@@ -4,12 +4,15 @@
 
 # Sumário
 
-- [Objetivos do projeto](#objetivos-do-projeto)
+- [Objetivos do projeto](#objetivos-do-projeto) -[CSV](#csv)
 - [Rotas e regras de negócio](#rotas-e-regras-de-negócio)
   - [Estrutura(propriedades) de uma task](#estrutura-propriedades-de-uma-task)
   - [Rotas](#rotas)
+  - [Implementações extras](#implementações-extras)
+- [Desenvolvimento do projeto](#desenvolvimento-do-projeto)
+  - [Criação de uma nova meta](#criação-de-uma-nova-meta)
 
-# Objetivos do projeto
+## Objetivos do projeto
 
 1. Criação de uma task
 2. Listagem de todas as tasks
@@ -18,7 +21,7 @@
 5. Marcar pelo `id` uma task como completa
 6. Importação de tasks em massa por um arquivo CSV
 
-## CSV
+### CSV
 
 Um arquivo CSV (Comma-Separated Values/Valores separados por vírgula) é um formato de arquivo de texto simples onde os dados são armazenados em linhas, e cada valor dentro de uma linha é separado por uma vírgula. Esse formato é amplamente utilizado para armazenar e compartilhar dados tabulares, como planilhas e bancos de dados.
 
@@ -34,9 +37,9 @@ O objetivo é adicionarmos um arquivo em formato CSV para cadastro de múltiplos
 
 Esse processo de importação em massa é útil quando você tem muitas tarefas para cadastrar e não quer fazer isso manualmente uma a uma.
 
-# Rotas e regras de negócio
+## Rotas e regras de negócio
 
-## Estrutura (propriedades) de uma task
+### Estrutura (propriedades) de uma task
 
 - `id` - Identificador único de cada task
 - `title` - Título da task
@@ -45,7 +48,7 @@ Esse processo de importação em massa é útil quando você tem muitas tarefas 
 - `created_at` - Data de quando a task foi criada.
 - `updated_at` - Deve ser sempre alterado para a data de quando a task foi atualizada.
 
-## Rotas
+### Rotas
 
 - `POST - /tasks`
   - Criar uma task no banco de dados, enviando os campos `title` e `description` por meio do `body` da requisição.
@@ -65,12 +68,12 @@ Esse processo de importação em massa é útil quando você tem muitas tarefas 
   - Marcação de conclusão de uma task. Quando uma task é concluida retorna ao seu estado “normal”.
   - Antes da alteração o `id` é validado ao checar se ele pertence a uma task salva no banco de dados.
 
-## Implementações extras
+### Implementações extras
 
 - Validação das propriedades `title` e `description` nas rotas `POST` e `PUT`, para checar se são válidas e não nulas, no `body` da requisição.
 - Nas rotas que recebem o `/:id`, realizado validação do `id`, para chegar se ele existe no banco de dados e é retornado à requisição com uma mensagem informando que o registro não existe.
 
-# Desenvolvimento do projeto
+## Desenvolvimento do projeto
 
 Criação inicial do servidor:
 
@@ -98,5 +101,82 @@ if (method === "POST" && url === "/tasks") {
 
 if (method === "GET" && url === "/tasks") {
   return res.end("Tasks list route");
+}
+```
+
+### Criação de uma nova meta
+
+Para criarmos uma nova task precisamos coletar as informações de `title`e `description` do corpo da requisição em formato JSON. Exemplo:
+
+`http://localhost:3333/tasks` - `POST`
+
+```json
+{
+  "title": "título task 1",
+  "description": "descrição task 1"
+}
+```
+
+Utilizando a criação de um servidor http com `node:http` os dados que chegam na requisição não vêm de uma vez só. Eles vem em "pedacinhos" chamados `chunks`(pedaços). Esses chunks de dados são recebidos de forma assíncrona e em formato binário, não em strings ou outras formas que conseguimos entender. Assim, para o node, dizemos que este formato de leitura é chamado `buffer`, que são uma esturutra de dados usada para armazenas de maneira temporária uma sequência de bytes.
+
+O Buffer é necessário porque, quando so dados chegam em partes/chunks, eles não estão diretamente em uma forma que o node.js pode interpretar como JSON, texto, etc. Assim o Buffer permite que coletemos os chunks para só assim processá-los.
+
+Dessa forma, lidamos com esses chunks dessa forma:
+
+```js
+const server = http.createServer(async (req, res) => {
+  const { method, url } = req;
+
+  const buffers = [];
+
+  for await (const chunk of req) {
+    buffers.push(chunk);
+  }
+```
+
+Dentro do servidor criamos um array vazio, que serão os nossos buffers com todos os nossos chunks.
+Criamos um laço de repetição que vai coletar TODOS os pedaços/chunks que vem da requisição e juntá-los todos no nosso array. Agora, utilizando o método `await` só vamos prosseguir com nossa aplicação quando todos os chunks estiverem juntos no nosso `buffers`.
+
+```js
+import { Buffer } from "node:buffer";
+// ... resto do código
+try {
+  req.body = JSON.parse(Buffer.concat(buffers).toString());
+} catch {
+  req.body = null;
+}
+```
+
+Agora precisamos interpretar esse código binário transformando o nosso `body` da nossa requisição:
+
+1. `Buffer.concat(buffers)`: Concatenar/juntar vários buffers em um único buffer, pois os chunks precisam estar juntos antes de processá-los
+2. `toString()`: Conversão do conteúdo do buffer (que é uma sequência de bytes) em uma string legível.
+3. `JSON.parse(): Usado para converter uma string JSON em um objeto JavaScript.
+
+Após ser transformado em um objeto JavaScript podemos desestruturá-lo para utilizá-lo dentro da nossa rota de criação de tasks:
+
+```js
+const tasks = [];
+// resto do código
+if (method === "POST" && url === "/tasks") {
+  const { title, description } = req.body;
+
+  tasks.push({
+    id: randomUUID(),
+    title,
+    description,
+  });
+  return res.writeHead(201).end();
+}
+```
+
+E para listar nossos tasks, retornamos o nosos array de tasks criadas:
+
+```js
+if (method === "GET" && url === "/tasks") {
+  return res
+    .setHeader("Content-type", "application/json; charset=utf-8")
+    .writeHead(200)
+    .end(JSON.stringify(tasks));
 }
 ```
