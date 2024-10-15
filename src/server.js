@@ -1,16 +1,19 @@
 import http from "node:http";
-import { randomUUID } from "node:crypto";
 import { Buffer } from "node:buffer";
-import { Database } from "./database.js";
+import { routes } from "./routes.js";
 
 const port = 3333;
-const db = new Database();
 
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
 
+  
   const buffers = [];
-
+  
+  const route = routes.find((route) => {
+    return route.method === method && route.path === url;
+  });
+  
   for await (const chunk of req) {
     buffers.push(chunk);
   }
@@ -21,37 +24,10 @@ const server = http.createServer(async (req, res) => {
     req.body = null;
   }
 
-  if (method === "GET" && url === "/tasks") {
-    const tasks = db.select("tasks");
-    return res
-      .setHeader("Content-type", "application/json; charset=utf-8")
-      .writeHead(200)
-      .end(JSON.stringify(tasks));
+  if (route) {
+    return route.handler(req, res);
   }
-
-  if (method === "POST" && url === "/tasks") {
-    const { title, description } = req.body;
-    const now = new Date();
-
-    const formattedDateTime = {
-      date: now.toLocaleDateString("pt-BR"),
-      hour: now.toLocaleTimeString("pt-BR"),
-    };
-
-    const task = {
-      id: randomUUID(),
-      title,
-      description,
-      completed_at: null,
-      created_at: formattedDateTime,
-      updated_at: formattedDateTime,
-    };
-
-    db.insert("tasks", task);
-
-    return res.writeHead(201).end();
-  }
-
+  
   return res.writeHead(404).end();
 });
 

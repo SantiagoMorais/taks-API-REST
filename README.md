@@ -12,6 +12,9 @@
 - [Desenvolvimento do projeto](#desenvolvimento-do-projeto)
   - [Criação de uma nova meta](#criação-de-uma-nova-meta)
   - [Banco de dados](#banco-de-dados)
+    - [Persistência de dados no banco](#persistência-de-dados-no-banco)
+    - [Recuperar dados da tabela](#recuperar-dados-da-tabela)
+  - [Separar rotas do servidor](#separar-rotas-do-servidor)
 
 ## Objetivos do projeto
 
@@ -188,15 +191,23 @@ O banco de dados foi criado utilizando uma `class` javascript:
 
 ```js
 export class Database {
-  database = {};
+  #database = {};
 }
 ```
 
-A princípio ele somente possui uma propriedade que é um objeto, chamada `database`, onde serão armazenados os dados do banco e, a princípio, teremos duas funções:
+A princípio ele somente possui uma propriedade que é um objeto.
+Ao utilizarmos o `#` definimos que é uma propriedade privada e não pode ser acessada fora da classe. Por exemplo:
+
+```js
+const db = new Database();
+console.log(db.database);
+```
+
+Ao ser privada, o usuário precisa utilizar uma das nossas funções para listagem de dados do banco. Esta primeira propriedade é chamada `#database`, onde serão armazenados os dados do banco e, a princípio, teremos duas funções:
 
 ```js
   select(table) {
-    const data = this.database[table] ?? [];
+    const data = this.#database[table] ?? [];
     return data;
   }
 ```
@@ -205,10 +216,10 @@ Seleciona os dados da tabela e confere se ela já possui dados. Caso não, é re
 
 ```js
   insert(table, data) {
-    if (Array.isArray(this.database[table])) {
-      this.database[table].push(data);
+    if (Array.isArray(this.#database[table])) {
+      this.#database[table].push(data);
     } else {
-      this.database[table] = [data];
+      this.#database[table] = [data];
     }
 
     return data;
@@ -236,6 +247,7 @@ console.log(tasks);
 Agora só precisamos aplicar nosso banco de dados no servidor ao invés de usar um array comum, como estávamos fazendo.
 
 **Inserir novos dados**
+
 ```js
 import { Database } from "./database.js";
 const db = new Database();
@@ -248,7 +260,9 @@ const task = {
 
 db.insert("tasks", task);
 ```
+
 **Coletar dados da tabela**
+
 ```js
 const tasks = db.select("tasks");
 return res
@@ -257,4 +271,108 @@ return res
   .end(JSON.stringify(tasks));
 ```
 
+#### Persistência de dados no banco
+
+A princípio estamos conseguindo salvar dados no banco e selecioná-los, mas quando o servidor para, os dados são perdidos, pois nossa aplicação é `stateless`.
+
+É necessário outra função para persistir os dados no banco:
+
+```js
+import fs from "node:fs/promises";
+
+export class Database {
+  #database = {};
+
+  #persist() {
+    fs.writeFile("db.json", JSON.stringify(this.#database));
+  }
+  //...
+}
+```
+
+A propriedade `#persist` é exclusiva da classe e é uma função que utiliza o módulo fs, que é uma API do node capaz de interagir com o sistema de arquivos do computador, como ler, escrever e manipular arquivos e diretórios.
+Assim, ao utilizá-lo, transformamos os dados do objeto `#database` em uma string JSON e gravamos esse conteúdo no arquivo `db.json`.
+
+```js
+  insert(table, data) {
+    //...
+
+    this.#persist();
+    return data;
+  }
+```
+
+Agora sempre que adicionarmos um novo dado na tabela, a função `#persist` deve ser chamada para persistir os dados na tabela. Caso este arquivo não exista, ele será criado, senão os novos dados só serão adicionados a ele.
+
+#### Recuperar dados da tabela
+
+O problema é que quando a aplicação reinicia, ela perde a conexão com o arquivo `db.json` que criamos e, apesar de os dados estarem salvos, a listagem irá reiniciar.
+
+`src/database.js`
+
+```js
+import fs from "node:fs/promises";
+
+const databasePath = new URL("../db.json", import.meta.url);
+```
+
+- `databasePath`: Usa o constructor `new URL()` para criar o caminho completo (path) do arquivo `db.json`a partir do local atual do arquivo no código.
+- `import.meta.url`: Retorna o caminho do módulo atual (arquivo JS). Isso permite que `../db.json` seja resolvido corretamente, independente de onde o código esteja sendo executado.
+  - Ou seja, primeiro parâmetro define onde o arquivo `db.json` está, e o segundo parâmetro define onde está o arquivo database.js, para não haver conflitos ou erros de caminho entre eles.
+
+```js
+  constructor() {
+    fs.readFile(databasePath, "utf-8").then(data => {
+        this.#database = JSON.parse(data)
+    }).catch(() => {
+        this.#persist();
+    })
+  }
+```
+
+- `constructor()`: é executado automaticamente quando a clase Database é instanciada.
+- `fs.readFile()`: tenta ler o arquivo `db.json`no caminho definido por `databasePath`.
+  - Se a leitura for bem-sucedida, o conteúdo do arquivo é convertido de string JSON para objeto e atribuído à variável privada `#database`.
+  - Se ocorrer algum erro, exemplo o arquivo não existir, o `catch` é executado e o método `#persist()` é chamado para criar um novo arquivo `db.json` vazio.
+
+### Separar rotas do servidor
+
+criamos um novo arquivo para guardar todas as rotas e deixá-los separados do servidor. As rotas são um array de objetos que possuem as chaves:
+
+- method: o método da requisição
+- path: o caminho/url
+- handler: a função realizada na rota.
+  Exemplo:
+
+```js
+export const routes = [
+  {
+    method: "GET",
+    path: "/tasks",
+    handler: (req, res) => {
+      const tasks = db.select("tasks");
+      return //...
+    },
+  },
+```
+
+Assim, no servidor, só precisamos encontrar a rota de acordo com os dados provindos da requisição:
+
+```js
+import { routes } from "./routes.js";
+
+const server = http.createServer(async (req, res) => {
+  const { method, url } = req;
+
+  const route = routes.find((route) => {
+    return route.method === method && route.path === url;
+  });
+
+  if (route) {
+    return route.handler(req, res);
+  }
+});
+```
+
+Comparamos o `method` e a `url` provinda da requisição do servidor, e se tanto o método quando a url forem iguais aos da rota de alguma das rotas do arquivo `./routes.js`, o `handler`/função da rota é executada, recebendo o `req` e `res` como parâmetro.
 
