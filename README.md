@@ -15,6 +15,7 @@
     - [Persistência de dados no banco](#persistência-de-dados-no-banco)
     - [Recuperar dados da tabela](#recuperar-dados-da-tabela)
   - [Separar rotas do servidor](#separar-rotas-do-servidor)
+  - [Definindo middlewares](#definindo-middlewares)
 
 ## Objetivos do projeto
 
@@ -376,3 +377,41 @@ const server = http.createServer(async (req, res) => {
 
 Comparamos o `method` e a `url` provinda da requisição do servidor, e se tanto o método quando a url forem iguais aos da rota de alguma das rotas do arquivo `./routes.js`, o `handler`/função da rota é executada, recebendo o `req` e `res` como parâmetro.
 
+### Definindo middlewares
+
+Middlewares são percursos que precisamos seguir na requisição HTTP antes de dar seguimento aos próximos passos no servidor. Assim, podemos considerar nosso tratamento ao `buffer` aos `chunks` do servidor como um `middleware`. Dessa forma, podemos criar um arquivo novo separado do servidor com essa manipulação.
+
+`src/middlewares/json.js`
+
+```js
+import { Buffer } from "node:buffer";
+
+export const json = async (req) => {
+  const buffers = [];
+
+  for await (const chunk of req) {
+    buffers.push(chunk);
+  }
+
+  try {
+    req.body = JSON.parse(Buffer.concat(buffers).toString());
+  } catch {
+    req.body = null;
+  }
+};
+```
+
+`src/server.js`
+
+```js
+import { json } from "./middlewares/json.js";
+
+const server = http.createServer(async (req, res) => {
+  const { method, url } = req;
+
+  await json(req);
+  //...
+}
+```
+
+Assim, a aplicação só dará continuidade quando todos os buffers forem unidos em um único buffer e adicionado ao `req.body` para só depois realizar a verificação das rotas.
