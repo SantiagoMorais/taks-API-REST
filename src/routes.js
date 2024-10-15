@@ -24,6 +24,19 @@ export const routes = [
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
       const { title, description } = req.body;
+
+      if (!title) return res.writeHead(400).end("Title is required");
+      if (title.length < 2)
+        return res
+          .writeHead(400)
+          .end("The title requires a minimum of 2 characters");
+      if (!description)
+        return res.writeHead(400).end("Description is required");
+      if (description.length < 2)
+        return res
+          .writeHead(400)
+          .end("The description requires a minimum of 2 characters");
+
       const now = new Date();
 
       const formattedDateTime = {
@@ -50,6 +63,12 @@ export const routes = [
     path: buildRoutePath("/tasks/:id"),
     handler: (req, res) => {
       const { id } = req.params;
+      const checkId = db.findUnique("tasks", id);
+
+      if (!checkId) {
+        return res.writeHead(404).end("Task not found");
+      }
+
       db.delete("tasks", id);
       return res.writeHead(204).end();
     },
@@ -61,6 +80,11 @@ export const routes = [
       const { id } = req.params;
       const { title, description } = req.body;
       const now = new Date();
+      const checkId = db.findUnique("tasks", id);
+
+      if (!checkId) {
+        return res.writeHead(404).end("Task not found");
+      }
 
       const updatedData = {};
 
@@ -90,6 +114,15 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params;
       const now = new Date();
+      const checkId = db.findUnique("tasks", id);
+
+      if (!checkId) {
+        return res.writeHead(404).end("Task not found");
+      }
+
+      if (checkId.completed_at !== null) {
+        return res.writeHead(400).end("Task already completed");
+      }
 
       db.complete("tasks", id, {
         completed_at: {
